@@ -5,13 +5,13 @@ using namespace std;
 
 int Boint::ap;
 
-BatisGame::BatisGame(int numberOfPlayer,int boardSize)
+BatisGame::BatisGame(int numberOfPlayer,int boardSize,int Hnum,int AILevel)
 {
-	Current			= new ChessBoard(numberOfPlayer,boardSize);
-	if(Current->isValid()){
+	Current				= new ChessBoard(numberOfPlayer,boardSize);
+	if(Current->IsValid()){
 		Players			= new Character[numberOfPlayer+1];
-		Players[1]		= HUMAN;
-		for(int i=1;i<=numberOfPlayer;i++)Players[i]=AI;
+		for(int i=1;i<=Hnum;i++)Players[i]=HUMAN;
+		for(int i=Hnum+1;i<=numberOfPlayer;i++)Players[i]=AI;
 		GStatus			= PRE;
 		TStatus			= NORMAL;
 		TurnDone		= false;
@@ -20,42 +20,24 @@ BatisGame::BatisGame(int numberOfPlayer,int boardSize)
 		Passes			= 0;
 		NumberOfPlayer	= numberOfPlayer;
 		BoardSize		= boardSize;
+		Strategy=Strategies[AILevel];
 	}
 }
 
 BatisGame::~BatisGame(void)
 {
-	if(Current && Current->isValid()){
+	if(Current && Current->IsValid()){
 		if(Players) delete [] Players;
 		delete Current;
 	}
 }
 
 
-vector<Boint> BatisGame::GetMark(int PlayerID,const ChessBoard& board)
-{
-	vector<Boint> dat;
-	int size=board.GetBoardSize();
-	for(int y=0;y<size;y++)
-		for(int x=0;x<size;x++){
-			ChessBoard c=board;
-			if(c.Place(PlayerID,x,y)){
-				Boint boint;
-				boint.x=x;
-				boint.y=y;
-				boint.n=board.GetBoardSize();
-				boint.mark=c.GetStatus(PlayerID);
-				dat.push_back(boint);
-			}
-		}
 
-	sort(dat.begin(),dat.end());
-	return dat;
-}
 
 void BatisGame::Start()
 {
-	if(!(Current->isValid())){
+	if(!(Current->IsValid())){
 		return;
 	}
 
@@ -101,11 +83,12 @@ void BatisGame::Next()
 
 void BatisGame::BTableRefresh()
 {
-	BTable=GetMark(ActivePlayer,*Current);
+	vector<Boint> BTable=GetMark(ActivePlayer,Current);
 	if(BTable.size()==0){
 		TStatus=PASS;
 		Passes++;
 	}else if(BTable.size()==1){
+		Bone=BTable[0];
 		TStatus=AUTO;
 		Passes=0;
 	}else{
@@ -126,7 +109,7 @@ bool BatisGame::Put()
 
 	switch(TStatus){
 	case AUTO:
-		Put(BTable[0].x,BTable[0].y);
+		Put(Bone.x,Bone.y);
 		TurnDone	= true;
 		break;
 	case PASS:
@@ -135,7 +118,7 @@ bool BatisGame::Put()
 	case NORMAL:
 		switch(Players[ActivePlayer]){
 		case AI:
-			Put(BTable[0].x,BTable[0].y);
+			Put(Strategy(ActivePlayer,Current));
 			break;
 		case HUMAN:
 			break;
@@ -144,6 +127,11 @@ bool BatisGame::Put()
 		break;
 	}
 	return true;
+}
+
+bool BatisGame::Put(Boint bo)
+{
+	return Put(bo.x,bo.y);
 }
 
 bool BatisGame::Put(int x,int y)
@@ -176,25 +164,9 @@ bool BatisGame::IsGameOver() const
 	return GStatus==OVER;
 }
 
-BatisGame::TurnStatus BatisGame::GetTurnStatus() const
+TurnStatus BatisGame::GetTurnStatus() const
 {
 	return TStatus;
-}
-
-
-void BatisGame::Show()
-{
-	Current->Print();
-	
-	/*printf("游戏状态:%s,轮状态:%s,轮结束:%d,轮数:%d,选手:%d,跳过:%d,历史:%d\n",
-		GameStatusMsg[GStatus],TurnStatusMsg[TStatus],TurnDone,Turn,ActivePlayer,Passes,History.size());*/
-	/*GameStatus GStatus;
-	TurnStatus TStatus;
-	bool TurnDone;
-	int  Turn,ActivePlayer,NumberOfPlayer,BoardSize;
-	Character* Players;
-	ChessBoard* Current;
-	std::vector<ChessBoard> history;*/
 }
 
 
@@ -236,7 +208,7 @@ bool BatisGame::AutoGo()
 	return true;
 }
 
-BatisGame::GameStatus BatisGame::GetGameStatus() const
+GameStatus BatisGame::GetGameStatus() const
 {
 	return GStatus;
 }
@@ -244,11 +216,6 @@ BatisGame::GameStatus BatisGame::GetGameStatus() const
 int BatisGame::GetNumberOfPlayer() const
 {
 	return NumberOfPlayer;
-}
-
-std::vector<Boint> BatisGame::GetBTable()
-{
-	return BTable;
 }
 
 bool BatisGame::IsWaitingForInput()

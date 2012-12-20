@@ -9,3 +9,4 @@ TODO:
 3.Menu Design
 4.Animation
 5.Texture
+6.History

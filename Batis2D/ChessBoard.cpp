@@ -1,39 +1,31 @@
 #include "ChessBoard.h"
 #include "BatisConstants.h"
-#include <iostream>
-using namespace std;
+#include <string.h>
 
-int ChessBoard::TraceTable[8][2]={
+const int ChessBoard::TraceTable[8][2]={
 	{ 0,-1}, { 1,-1},
 	{ 1, 0}, { 1, 1},
 	{ 0, 1}, {-1, 1},
 	{-1, 0}, {-1,-1},
 };
 
-void ChessBoard::init()
+void ChessBoard::Init()
 {
 	Valid			= false;
 	Board			= NULL;
 	Count			= NULL;
 	BoardSize		= 0;
 	NumberOfPlayer	= 0;
-	
 }
 
 ChessBoard::ChessBoard()
 {
-	init();
+	Init();
 }
 
 ChessBoard::ChessBoard(int numberOfPlayer,int size)
 {
-	init();
-	Init(numberOfPlayer,size);
-}
-
-void ChessBoard::Init(int numberOfPlayer,int size)
-{
-	
+	Init();
 	Valid		= true;
 	if(numberOfPlayer< NumberOfPlayerMin || numberOfPlayer> NumberOfPlayerMax){
 		Valid	= false;
@@ -51,7 +43,7 @@ void ChessBoard::Init(int numberOfPlayer,int size)
 		Board			= new int[BoardSize*BoardSize];
 		Count			= new int[BoardSize+1];
 		memset(Board,0,BoardSize*BoardSize*sizeof(int));
-		memset(Count,0,BoardSize*sizeof(int));
+		memset(Count,0,(BoardSize+1)*sizeof(int));
 		Count[0]		= BoardSize*BoardSize;
 		int beg			= (BoardSize-NumberOfPlayer)/2;
 		for(int i = beg; i < beg+NumberOfPlayer; i++)
@@ -77,7 +69,7 @@ ChessBoard& ChessBoard::operator=(const ChessBoard& source)
 		Board			= new int[BoardSize*BoardSize];
 		Count			= new int[BoardSize+1];
 		memcpy(Board,source.Board,BoardSize*BoardSize*sizeof(int));
-		memcpy(Count,source.Count,BoardSize*sizeof(int));
+		memcpy(Count,source.Count,(BoardSize+1)*sizeof(int));
 	}
 	return *this;
 }
@@ -85,7 +77,7 @@ ChessBoard& ChessBoard::operator=(const ChessBoard& source)
 ChessBoard::ChessBoard(const ChessBoard& source)
 {
 	if(this!=&source)
-		*this	= source;
+		*this = source;
 }
 
 int ChessBoard::GetNumberOfPlayer() const
@@ -100,7 +92,6 @@ int ChessBoard::GetBoardSize() const
 
 bool ChessBoard::Place(int PlayerID,int x,int y)
 {
-	//Debug("Try palce"+int2string(PlayerID)+"@"+int2string(x)+","+int2string(y));
 	bool sd[8];
 	bool rt=false;
 	for(int i=0;i<8;i++){
@@ -124,7 +115,6 @@ bool ChessBoard::Place(int PlayerID,int x,int y)
 		Set(PlayerID,x,y);
 	}
 
-
 	return rt;
 }
 
@@ -137,17 +127,13 @@ int ChessBoard::GetStatus(int PlayerID) const
 
 int ChessBoard::Location2Index(int x, int y) const
 {
-	int rt	= -1;
-	if( x >= 0 && x < BoardSize && y >= 0 && y < BoardSize)
-		rt = y*BoardSize + x;
-	return rt;
+	return ( x >= 0 && x < BoardSize && y >= 0 && y < BoardSize)?y*BoardSize + x:-1;
 }
 
-bool ChessBoard::isValid()
+bool ChessBoard::IsValid() const
 {
 	return Valid;
 }
-
 
 void ChessBoard::Set(int PlayerID,int x,int y)
 {
@@ -157,19 +143,6 @@ void ChessBoard::Set(int PlayerID,int x,int y)
 		Board[idx]=PlayerID;
 		Count[PlayerID]++;
 	}
-}
-
-void ChessBoard::Print()
-{
-	for(int i=0;i<BoardSize;i++){
-		for(int j=0;j<BoardSize;j++)
-			cout<<Board[Location2Index(j,i)];
-		cout<<endl;
-	}
-	cout<<"[";
-	for(int i=0;i<NumberOfPlayer;i++)
-		cout<<Count[i]<<",";
-	cout<<Count[NumberOfPlayer]<<"]\n";
 }
 
 bool ChessBoard::Trace(int PlayerID,int x,int y, int dx, int dy)
@@ -193,12 +166,13 @@ bool ChessBoard::Trace(int PlayerID,int x,int y, int dx, int dy)
 			rt=true;
 		}
 	}
-	//Debug("Tracing P" + int2string(PlayerID)+"@("+int2string(x)+","+int2string(y)+")="+int2string(dx)+","+int2string(dy));
-	//Debug(rt);
 	return rt;
 }
 
 int ChessBoard::GetID(int x,int y) const
 {
-	return Board[Location2Index(x,y)];
+	int idx	= Location2Index(x,y);
+	if(idx<0)
+		throw -1;
+	return Board[idx];
 }

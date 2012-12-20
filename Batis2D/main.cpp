@@ -40,7 +40,6 @@ void CALLBACK TimerProc(HWND hWnd,UINT nMsg,UINT nTimerid,DWORD dwTime)
 	}
 }
 
-
 //--------------------------------------------------------------------------------------
 // Entry point to the program. Initializes everything and goes into a message processing 
 // loop. Idle time is used to render the scene.
@@ -62,7 +61,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
         return 0;
     }
 
-	SetTimer(g_hWnd,1,50,TimerProc);
+	SetTimer(g_hWnd,1,250,TimerProc);
+
+	Render();
 	// Main message loop
     MSG msg = {0};
     while( WM_QUIT != msg.message )
@@ -111,9 +112,9 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     RECT rc = { 0, 0, 800, 600 };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
     g_hWnd = CreateWindow( L"BatisWindowClass", L"Batis",
-					WS_OVERLAPPEDWINDOW,//WS_OVERLAPPED|WS_MINIMIZEBOX|WS_SYSMENU
-                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-                           NULL );
+					WS_OVERLAPPEDWINDOW,CW_USEDEFAULT, CW_USEDEFAULT, 
+					rc.right - rc.left, rc.bottom - rc.top, 
+					NULL, NULL, hInstance,NULL );
     if( !g_hWnd )
         return E_FAIL;
 
@@ -195,8 +196,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 {
     PAINTSTRUCT ps;
     HDC hdc;
-	/*static int m_lastWidth;
-	static float m_prop=6.0/8;*/
+	
     switch( message )
     {
 		case WM_LBUTTONDOWN:

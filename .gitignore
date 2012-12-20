@@ -1,10 +1,11 @@
 Debug/
+ipch/
 *.suo
 *.exe
 *.dll
 *.sdf
 *.opensdf
-
+*.vsp
 # Compiled Object files
 *.slo
 *.lo
