@@ -1,3 +1,10 @@
+Debug/
+*.suo
+*.exe
+*.dll
+*.sdf
+*.opensdf
+
 # Compiled Object files
 *.slo
 *.lo
