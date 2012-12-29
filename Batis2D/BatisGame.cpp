@@ -32,9 +32,6 @@ BatisGame::~BatisGame(void)
 	}
 }
 
-
-
-
 void BatisGame::Start()
 {
 	if(!(Current->IsValid())){
@@ -218,7 +215,7 @@ int BatisGame::GetNumberOfPlayer() const
 	return NumberOfPlayer;
 }
 
-bool BatisGame::IsWaitingForInput()
+bool BatisGame::IsWaitingForInput() const
 {
-	return (!TurnDone&& Players[ActivePlayer]==HUMAN);
+	return (!TurnDone && Players[ActivePlayer]==HUMAN);
 }

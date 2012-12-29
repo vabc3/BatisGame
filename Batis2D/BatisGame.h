@@ -24,7 +24,7 @@ public:
 	int GetTurn() const;
 	int GetActivePlayer() const;
 	bool IsGameOver() const;
-	bool IsWaitingForInput();
+	bool IsWaitingForInput() const;
 	
 	TurnStatus GetTurnStatus() const;
 	GameStatus GetGameStatus() const;
