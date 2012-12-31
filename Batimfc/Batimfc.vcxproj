@@ -97,6 +97,7 @@
     <None Include="ReadMe.txt" />
     <None Include="res\Batimfc.ico" />
     <None Include="res\Batimfc.rc2" />
+    <None Include="res\Batis.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Batimfc.h" />

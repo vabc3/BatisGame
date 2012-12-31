@@ -33,13 +33,15 @@ void COptionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2, m_nHuman);
 	DDV_MinMaxInt(pDX, m_nHuman, 0, 6);
 	DDX_Text(pDX, IDC_EDIT3, m_nComputer);
-	DDV_MinMaxInt(pDX, m_nComputer, 0, 28);
+	DDV_MinMaxInt(pDX, m_nComputer, 0, 22);
 	DDX_Radio(pDX, IDC_RADIO1, m_nRadio);
 	DDV_MinMaxInt(pDX, m_nRadio, 0, 2);
-	if(pDX->m_bSaveAndValidate)
-	pDX->Fail();
+	if (pDX->m_bSaveAndValidate)
+		if(m_nHuman+m_nComputer>m_nBoardSize){
+			AfxMessageBox(L"Bs too small");
+			pDX->Fail();
+		}
 }
-
 
 BEGIN_MESSAGE_MAP(COptionDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &COptionDlg::OnBnClickedButton1)

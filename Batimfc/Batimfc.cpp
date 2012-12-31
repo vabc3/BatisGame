@@ -29,7 +29,7 @@ CBatimfcApp::CBatimfcApp()
 {
 	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
 	//为 CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("Batimfc.AppID.NoVersion"));
+	SetAppID(_T("Karata.Batis.Batimfc"));
 
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
@@ -69,7 +69,7 @@ BOOL CBatimfcApp::InitInstance()
 	// 更改用于存储设置的注册表项
 	// TODO: 应适当修改该字符串，
 	// 例如修改为公司或组织名
-	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
+	SetRegistryKey(_T("Batis"));
 
 
 	// 若要创建主窗口，此代码将创建新的框架窗口
@@ -147,16 +147,21 @@ void CBatimfcApp::OnAppAbout()
 
 void CBatimfcApp::OnNewGame()
 {
-	
 }
 
 
 void CBatimfcApp::OnOption()
 {
 	COptionDlg optionDlg;
-	optionDlg.m_nHuman=6;
-	optionDlg.m_nRadio=66;
+	optionDlg.m_nRadio		= theApp.GetProfileIntW(L"Settings",L"Radio",0);
+	optionDlg.m_nHuman		= theApp.GetProfileIntW(L"Settings",L"Human",1);
+	optionDlg.m_nComputer	= theApp.GetProfileIntW(L"Settings",L"Computer",1);
+	optionDlg.m_nBoardSize	= theApp.GetProfileIntW(L"Settings",L"BoardSize",8);
 	optionDlg.DoModal();
+	theApp.WriteProfileInt(L"Settings",L"Radio",optionDlg.m_nRadio);
+	theApp.WriteProfileInt(L"Settings",L"Human",optionDlg.m_nHuman);
+	theApp.WriteProfileInt(L"Settings",L"Computer",optionDlg.m_nComputer);
+	theApp.WriteProfileInt(L"Settings",L"BoardSize",optionDlg.m_nBoardSize);
 }
 
 

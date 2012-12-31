@@ -5,3 +5,4 @@ Use mfc to control window
 
 TODO:
 1.Bubble tips
+2.Save Game

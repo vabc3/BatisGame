@@ -22,6 +22,9 @@
     <None Include="res\Batimfc.ico">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\Batis.ico">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Batimfc.h">
