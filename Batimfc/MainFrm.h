@@ -33,7 +33,7 @@ public:
 #endif
 
 protected:  // 控件条嵌入成员
-	CStatusBar        m_wndStatusBar;
+	CStatusBar    m_wndStatusBar;
 	CChildView    m_wndView;
 
 // 生成的消息映射函数

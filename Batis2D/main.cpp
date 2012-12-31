@@ -216,7 +216,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
             break;
 		case WM_SIZE:
 			RECT rect;
-			GetClientRect(hWnd,&rect);
+			GetClientRect (hWnd,&rect);
 			UpdateSketch(&rect,&DefaultParas[0],&Sketch);
 			pRenderTarget->Resize(D2D1::SizeU(Sketch.SceneWidth,Sketch.SceneHeight));
 			//if((rect.right-rect.left)!=m_lastWidth)         //如果调整宽度发生变化，则将高度调整

@@ -56,7 +56,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // Î´ÄÜ´´½¨
 	}
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
-
+	//m_wndView.getsa
+	d2d.InitDevice(m_wndView.GetSafeHwnd());
 	return 0;
 }
 

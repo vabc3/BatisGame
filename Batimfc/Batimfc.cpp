@@ -8,6 +8,7 @@
 #include "MainFrm.h"
 #include "OptionDlg.h"
 #include "BatisD2D.h"
+#include "BatisConstant.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,7 +16,6 @@
 
 
 // CBatimfcApp
-
 BEGIN_MESSAGE_MAP(CBatimfcApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, &CBatimfcApp::OnAppAbout)
 	ON_COMMAND(ID_NEW_GAME, &CBatimfcApp::OnNewGame)
@@ -24,7 +24,6 @@ END_MESSAGE_MAP()
 
 
 // CBatimfcApp 构造
-
 CBatimfcApp::CBatimfcApp()
 {
 	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
@@ -35,13 +34,10 @@ CBatimfcApp::CBatimfcApp()
 }
 
 // 唯一的一个 CBatimfcApp 对象
-
 CBatimfcApp theApp;
 BatisConfigure GConf;
 
-
 // CBatimfcApp 初始化
-
 BOOL CBatimfcApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -78,14 +74,11 @@ BOOL CBatimfcApp::InitInstance()
 		WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, NULL,
 		NULL);
 
-	d2d.InitDevice(pFrame->GetSafeHwnd());
-
+	//d2d.InitDevice(pFrame->GetSafeHwnd());
+	//pFrame->view
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
-	
-	
-
 
 	return TRUE;
 }
@@ -137,12 +130,9 @@ void CBatimfcApp::OnAppAbout()
 }
 
 // CBatimfcApp 消息处理程序
-
-
 void CBatimfcApp::OnNewGame()
 {
 }
-
 
 void CBatimfcApp::OnOption()
 {
@@ -163,8 +153,8 @@ void BatisConfigure::Save()
 
 void BatisConfigure::Load()
 {
-	nRadio		= theApp.GetProfileIntW(Section,Keys[0],0);
-	nHuman		= theApp.GetProfileIntW(Section,Keys[1],1);
-	nComputer	= theApp.GetProfileIntW(Section,Keys[2],1);
-	nBoardSize	= theApp.GetProfileIntW(Section,Keys[3],8);
+	nRadio		= theApp.GetProfileIntW(Section,Keys[0],BatisConstant::nLevelDefault);
+	nHuman		= theApp.GetProfileIntW(Section,Keys[1],BatisConstant::nHumanDefault);
+	nComputer	= theApp.GetProfileIntW(Section,Keys[2],BatisConstant::nComputerDefault);
+	nBoardSize	= theApp.GetProfileIntW(Section,Keys[3],BatisConstant::nBoardSizeDefault);
 };
