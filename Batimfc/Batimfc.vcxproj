@@ -101,9 +101,12 @@
     <None Include="res\Batis.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI.h" />
     <ClInclude Include="Batimfc.h" />
     <ClInclude Include="BatisConstant.h" />
     <ClInclude Include="BatisD2D.h" />
+    <ClInclude Include="BatisGame.h" />
+    <ClInclude Include="ChessBoard.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OptionDlg.h" />
@@ -112,8 +115,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="Batimfc.cpp" />
     <ClCompile Include="BatisD2D.cpp" />
+    <ClCompile Include="BatisGame.cpp" />
+    <ClCompile Include="ChessBoard.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OptionDlg.cpp" />

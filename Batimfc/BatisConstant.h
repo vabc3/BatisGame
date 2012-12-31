@@ -4,10 +4,10 @@ struct BatisConstant{
 	static const int nPlayerMin			= 2;
 	static const int nPlayerMax			= 28;
 	static const int nHumanDefault		= 1;
-	static const int nHumanMin			= 1;
+	static const int nHumanMin			= 0;
 	static const int nHumanMax			= 6;
 	static const int nComputerDefault	= 1;
-	static const int nComputerMin		= 1;
+	static const int nComputerMin		= 0;
 	static const int nComputerMax		= 22;
 	static const int nBoardSizeDefault	= 8;
 	static const int nBoardSizeMin		= 4;

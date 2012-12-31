@@ -18,6 +18,7 @@ IMPLEMENT_DYNAMIC(CMainFrame, CFrameWnd)
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -36,6 +37,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	KillTimer(1);
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -58,6 +60,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 	//m_wndView.getsa
 	d2d.InitDevice(m_wndView.GetSafeHwnd());
+	SetTimer(1,500,NULL);
 	return 0;
 }
 
@@ -104,4 +107,14 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 	// 否则，执行默认处理
 	return CFrameWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+}
+
+
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CFrameWnd::OnTimer(nIDEvent);
+	TRACE("X");
+	if(d2d.bg)d2d.bg->AutoGo();
 }

@@ -14,7 +14,7 @@ IMPLEMENT_DYNAMIC(COptionDlg, CDialogEx)
 COptionDlg::COptionDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(COptionDlg::IDD, pParent)
 {
-	m_nRadio		= GConf.nRadio;
+	m_nRadio		= GConf.nLevel;
 	m_nHuman		= GConf.nHuman;
 	m_nComputer		= GConf.nComputer;
 	m_nBoardSize	= GConf.nBoardSize;
@@ -42,7 +42,7 @@ void COptionDlg::DoDataExchange(CDataExchange* pDX)
 		}
 
 	if (pDX->m_bSaveAndValidate){
-		GConf.nRadio	= m_nRadio;
+		GConf.nLevel	= m_nRadio;
 		GConf.nHuman	= m_nHuman;
 		GConf.nComputer	= m_nComputer;
 		GConf.nBoardSize= m_nBoardSize;

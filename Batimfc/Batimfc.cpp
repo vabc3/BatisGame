@@ -26,8 +26,6 @@ END_MESSAGE_MAP()
 // CBatimfcApp 构造
 CBatimfcApp::CBatimfcApp()
 {
-	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
-	//为 CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("Karata.Batis.Batimfc"));
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
@@ -36,6 +34,7 @@ CBatimfcApp::CBatimfcApp()
 // 唯一的一个 CBatimfcApp 对象
 CBatimfcApp theApp;
 BatisConfigure GConf;
+BatisGame* Game;
 
 // CBatimfcApp 初始化
 BOOL CBatimfcApp::InitInstance()
@@ -132,6 +131,11 @@ void CBatimfcApp::OnAppAbout()
 // CBatimfcApp 消息处理程序
 void CBatimfcApp::OnNewGame()
 {
+	Game = new BatisGame(GConf.nHuman+GConf.nComputer,GConf.nBoardSize,GConf.nHuman,GConf.nLevel);
+	d2d.bg=Game;
+	d2d.Update();
+	d2d.Render();
+	Game->Start();
 }
 
 void CBatimfcApp::OnOption()
@@ -145,7 +149,7 @@ LPCTSTR BatisConfigure::Keys[]={L"Radio",L"Human",L"Computer",L"BoardSize"};
 
 void BatisConfigure::Save()
 {
-	theApp.WriteProfileInt(Section,Keys[0],nRadio);
+	theApp.WriteProfileInt(Section,Keys[0],nLevel);
 	theApp.WriteProfileInt(Section,Keys[1],nHuman);
 	theApp.WriteProfileInt(Section,Keys[2],nComputer);
 	theApp.WriteProfileInt(Section,Keys[3],nBoardSize);
@@ -153,7 +157,7 @@ void BatisConfigure::Save()
 
 void BatisConfigure::Load()
 {
-	nRadio		= theApp.GetProfileIntW(Section,Keys[0],BatisConstant::nLevelDefault);
+	nLevel		= theApp.GetProfileIntW(Section,Keys[0],BatisConstant::nLevelDefault);
 	nHuman		= theApp.GetProfileIntW(Section,Keys[1],BatisConstant::nHumanDefault);
 	nComputer	= theApp.GetProfileIntW(Section,Keys[2],BatisConstant::nComputerDefault);
 	nBoardSize	= theApp.GetProfileIntW(Section,Keys[3],BatisConstant::nBoardSizeDefault);

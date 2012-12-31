@@ -8,7 +8,7 @@
 #endif
 
 #include "resource.h"       // 主符号
-
+#include "BatisGame.h"
 
 // CBatimfcApp:
 // 有关此类的实现，请参阅 Batimfc.cpp
@@ -45,8 +45,9 @@ public:
 	int nBoardSize;
 	int nHuman;
 	int nComputer;
-	int nRadio;
+	int nLevel;
 };
 
 extern CBatimfcApp theApp;
 extern BatisConfigure GConf;
+extern BatisGame* Game;

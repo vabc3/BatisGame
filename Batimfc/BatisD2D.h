@@ -1,6 +1,7 @@
 #pragma once
 #include <dwrite.h>
 #include <d2d1.h>
+#include "BatisGame.h"
 
 typedef struct{
 	FLOAT SperatorLineRatio,BoardSizeRatio;
@@ -13,6 +14,7 @@ struct BatisSketch{
 	LONG Delta;
 	static BatisSketchPara DefaultParas[1];
 	void Update(int x,int y,int BoardNo,BatisSketchPara* para=DefaultParas);
+	void Update(int BoardNo,BatisSketchPara* para=DefaultParas);
 };
 
 class BatisD2D
@@ -23,16 +25,21 @@ public:
 
 	void InitDevice(HWND hWnd);
 	void Resize(int x,int y);
+	void Update();
 	void Render();
 	void DrawSperatorLine(ID2D1Brush* brush);
 	void DrawBoard(ID2D1Brush* brush,int Size);
-	//void DrawDebug(ID2D1Brush* Brush,IDWriteTextFormat* m_pText,BatisGame* bg);
-	//void DrawInfo(ID2D1Brush* Brush,IDWriteTextFormat* m_pText,BatisGame* bg);
-	//void DrawPieces(ID2D1Brush** brush,int Num,const ChessBoard* board);
-	//void HandleClick(BatisGame* bg);
+	void DrawDebug();
+	void DrawInfo();
+	void DrawPieces(ID2D1Brush** brush);
+	void HandleClick();
 	void HandleMove(int x,int y);
 
-private:
+	BatisGame*				bg;
+private:	
+	void DrawPiece(ID2D1Brush* brush,int X,int Y,int R);
+	void DrawHint(ID2D1Brush* Brush,int x,int y,int idx,int mark);
+	int						px,py,ActiveX,ActiveY;
 	BatisSketch				Sketch;
 	ID2D1Factory*			pD2DFactory; // Direct2D factory
 	ID2D1HwndRenderTarget*	pRenderTarget;   // Render target	
