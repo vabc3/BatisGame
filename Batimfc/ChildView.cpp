@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "Batimfc.h"
 #include "ChildView.h"
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -43,6 +42,7 @@ BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
+BatisD2D d2d;
 void CChildView::OnPaint() 
 {
 	CPaintDC dc(this); // 用于绘制的设备上下文
@@ -50,14 +50,6 @@ void CChildView::OnPaint()
 	// TODO: 在此处添加消息处理程序代码
 	
 	// 不要为绘制消息而调用 CWnd::OnPaint()
-
-	
-	/*CControlBar* pBar = CFrameWnd::GetControlBar(
-	if (pBar != NULL)
-	{
-		pCmdUI->SetCheck((pBar->GetStyle() & WS_VISIBLE) != 0);
-		return;
-	}*/
-
+	d2d.Render();
 }
 

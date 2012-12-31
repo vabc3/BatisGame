@@ -1,4 +1,3 @@
-
 // Batimfc.cpp : 定义应用程序的类行为。
 //
 
@@ -8,6 +7,7 @@
 #include "Batimfc.h"
 #include "MainFrm.h"
 #include "OptionDlg.h"
+#include "BatisD2D.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,7 +30,6 @@ CBatimfcApp::CBatimfcApp()
 	// TODO: 将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
 	//为 CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("Karata.Batis.Batimfc"));
-
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
 }
@@ -38,6 +37,7 @@ CBatimfcApp::CBatimfcApp()
 // 唯一的一个 CBatimfcApp 对象
 
 CBatimfcApp theApp;
+BatisConfigure GConf;
 
 
 // CBatimfcApp 初始化
@@ -59,18 +59,13 @@ BOOL CBatimfcApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-	// 使用 RichEdit 控件需要  AfxInitRichEdit2()	
-	// AfxInitRichEdit2();
-
 	// 标准初始化
 	// 如果未使用这些功能并希望减小
 	// 最终可执行文件的大小，则应移除下列
 	// 不需要的特定初始化例程
 	// 更改用于存储设置的注册表项
-	// TODO: 应适当修改该字符串，
-	// 例如修改为公司或组织名
 	SetRegistryKey(_T("Batis"));
-
+	GConf.Load();
 
 	// 若要创建主窗口，此代码将创建新的框架窗口
 	// 对象，然后将其设置为应用程序的主窗口对象
@@ -83,16 +78,15 @@ BOOL CBatimfcApp::InitInstance()
 		WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, NULL,
 		NULL);
 
-
-
-
-
+	d2d.InitDevice(pFrame->GetSafeHwnd());
 
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
-	// 仅当具有后缀时才调用 DragAcceptFiles
-	//  在 SDI 应用程序中，这应在 ProcessShellCommand 之后发生
+	
+	
+
+
 	return TRUE;
 }
 
@@ -153,15 +147,24 @@ void CBatimfcApp::OnNewGame()
 void CBatimfcApp::OnOption()
 {
 	COptionDlg optionDlg;
-	optionDlg.m_nRadio		= theApp.GetProfileIntW(L"Settings",L"Radio",0);
-	optionDlg.m_nHuman		= theApp.GetProfileIntW(L"Settings",L"Human",1);
-	optionDlg.m_nComputer	= theApp.GetProfileIntW(L"Settings",L"Computer",1);
-	optionDlg.m_nBoardSize	= theApp.GetProfileIntW(L"Settings",L"BoardSize",8);
 	optionDlg.DoModal();
-	theApp.WriteProfileInt(L"Settings",L"Radio",optionDlg.m_nRadio);
-	theApp.WriteProfileInt(L"Settings",L"Human",optionDlg.m_nHuman);
-	theApp.WriteProfileInt(L"Settings",L"Computer",optionDlg.m_nComputer);
-	theApp.WriteProfileInt(L"Settings",L"BoardSize",optionDlg.m_nBoardSize);
 }
 
+LPCTSTR BatisConfigure::Section=L"Settings";
+LPCTSTR BatisConfigure::Keys[]={L"Radio",L"Human",L"Computer",L"BoardSize"};
 
+void BatisConfigure::Save()
+{
+	theApp.WriteProfileInt(Section,Keys[0],nRadio);
+	theApp.WriteProfileInt(Section,Keys[1],nHuman);
+	theApp.WriteProfileInt(Section,Keys[2],nComputer);
+	theApp.WriteProfileInt(Section,Keys[3],nBoardSize);
+};
+
+void BatisConfigure::Load()
+{
+	nRadio		= theApp.GetProfileIntW(Section,Keys[0],0);
+	nHuman		= theApp.GetProfileIntW(Section,Keys[1],1);
+	nComputer	= theApp.GetProfileIntW(Section,Keys[2],1);
+	nBoardSize	= theApp.GetProfileIntW(Section,Keys[3],8);
+};

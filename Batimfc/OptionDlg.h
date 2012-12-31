@@ -1,6 +1,5 @@
 #pragma once
 
-
 // COptionDlg ¶Ô»°¿ò
 
 class COptionDlg : public CDialogEx
@@ -22,6 +21,6 @@ public:
 	int m_nBoardSize;
 	int m_nHuman;
 	int m_nComputer;
-	afx_msg void OnBnClickedButton1();
 	int m_nRadio;
+	afx_msg void OnBnClickedButton1();
 };

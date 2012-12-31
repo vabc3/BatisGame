@@ -1,10 +1,8 @@
 
 // ChildView.h : CChildView 类的接口
 //
-
-
 #pragma once
-
+#include "BatisD2D.h"
 
 // CChildView 窗口
 
@@ -34,3 +32,4 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+extern BatisD2D d2d;

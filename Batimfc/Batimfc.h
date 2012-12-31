@@ -34,4 +34,19 @@ public:
 	afx_msg void OnOption();
 };
 
+class BatisConfigure
+{
+private:
+	static LPCTSTR Section;
+	static LPCTSTR Keys[4];
+public:
+	void Save();
+	void Load();
+	int nBoardSize;
+	int nHuman;
+	int nComputer;
+	int nRadio;
+};
+
 extern CBatimfcApp theApp;
+extern BatisConfigure GConf;

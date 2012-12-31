@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -55,6 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d2d1.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;dwrite.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -101,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Batimfc.h" />
+    <ClInclude Include="BatisD2D.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OptionDlg.h" />
@@ -110,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Batimfc.cpp" />
+    <ClCompile Include="BatisD2D.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OptionDlg.cpp" />
