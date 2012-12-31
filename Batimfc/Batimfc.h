@@ -31,6 +31,7 @@ public:
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnNewGame();
+	afx_msg void OnOption();
 };
 
 extern CBatimfcApp theApp;

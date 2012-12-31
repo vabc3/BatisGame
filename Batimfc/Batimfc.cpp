@@ -7,7 +7,7 @@
 #include "afxdialogex.h"
 #include "Batimfc.h"
 #include "MainFrm.h"
-#include "NewGameDlg.h"
+#include "OptionDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -19,6 +19,7 @@
 BEGIN_MESSAGE_MAP(CBatimfcApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, &CBatimfcApp::OnAppAbout)
 	ON_COMMAND(ID_NEW_GAME, &CBatimfcApp::OnNewGame)
+	ON_COMMAND(ID_OPTION, &CBatimfcApp::OnOption)
 END_MESSAGE_MAP()
 
 
@@ -146,6 +147,16 @@ void CBatimfcApp::OnAppAbout()
 
 void CBatimfcApp::OnNewGame()
 {
-	CNewGameDlg newGameDlg;
-	newGameDlg.DoModal();
+	
 }
+
+
+void CBatimfcApp::OnOption()
+{
+	COptionDlg optionDlg;
+	optionDlg.m_nHuman=6;
+	optionDlg.m_nRadio=66;
+	optionDlg.DoModal();
+}
+
+

@@ -42,7 +42,7 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NewGameDlg.h">
+    <ClInclude Include="OptionDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClCompile Include="ChildView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="NewGameDlg.cpp">
+    <ClCompile Include="OptionDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

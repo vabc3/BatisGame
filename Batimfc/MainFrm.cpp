@@ -32,15 +32,10 @@ static UINT indicators[] =
 
 CMainFrame::CMainFrame()
 {
-	// TODO: 在此添加成员初始化代码
-	CString ct;
-	afxDump<<CFrameWnd::OnBarCheck(ID_VIEW_STATUS_BAR)<<"\n";
-	TRACE("1Kif\n");
 }
 
 CMainFrame::~CMainFrame()
 {
-	afxDump<<CFrameWnd::OnBarCheck(ID_VIEW_STATUS_BAR)<<"\n";
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
