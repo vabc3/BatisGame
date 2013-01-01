@@ -40,12 +40,13 @@ BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
-BatisD2D d2d;
+
 void CChildView::OnPaint() 
 {
 	CPaintDC dc(this); // 用于绘制的设备上下文
 	// TODO: 在此处添加消息处理程序代码
 	// 不要为绘制消息而调用 CWnd::OnPaint()
+	d2d.ResizeEnd();
 	d2d.Render();
 }
 

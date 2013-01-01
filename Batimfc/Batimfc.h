@@ -1,4 +1,3 @@
-// Batimfc.h : Batimfc 应用程序的主头文件
 #pragma once
 
 #ifndef __AFXWIN_H__
@@ -7,22 +6,18 @@
 
 #include "resource.h"       // 主符号
 #include "BatisGame.h"
+#include "BatisD2D.h"
 
-// CBatimfcApp:
-// 有关此类的实现，请参阅 Batimfc.cpp
-//
 class CBatimfcApp : public CWinApp
 {
 public:
 	CBatimfcApp();
-// 重写
-public:
+
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-// 实现
-public:
-	afx_msg void OnAppAbout();
+	
 	DECLARE_MESSAGE_MAP()
+	afx_msg void OnAppAbout();
 	afx_msg void OnNewGame();
 	afx_msg void OnOption();
 };
@@ -43,4 +38,4 @@ public:
 
 extern CBatimfcApp theApp;
 extern BatisConfigure GConf;
-extern BatisGame* Game;
+extern BatisD2D d2d;

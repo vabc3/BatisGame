@@ -8,13 +8,15 @@ typedef struct{
 }BatisSketchPara;
 
 struct BatisSketch{
-	int SperatorLine;
-	LONG SceneTop,SceneLeft,SceneWidth,SceneHeight;
-	LONG BoardTop,BoardLeft,BoardSize,BoardDown,BoardRight;
-	LONG Delta;
-	static BatisSketchPara DefaultParas[1];
-	void Update(int x,int y,int BoardNo,BatisSketchPara* para=DefaultParas);
-	void Update(int BoardNo,BatisSketchPara* para=DefaultParas);
+	BatisSketch(const BatisSketchPara* Para=DefaultParas);
+	FLOAT SperatorLine;
+	FLOAT SceneTop,SceneLeft;
+	UINT32 SceneWidth,SceneHeight;
+	FLOAT BoardTop,BoardLeft,BoardSize,BoardDown,BoardRight;
+	FLOAT Delta;
+	const BatisSketchPara* Para;
+	const static BatisSketchPara DefaultParas[1];
+	void Update(int x,int y);
 };
 
 class BatisD2D
@@ -26,30 +28,28 @@ public:
 	void InitDevice(HWND hWnd);
 	void Resize(int x,int y);
 	void ResizeEnd();
-	void Update();
+	void StartGame();
 	void Render();
-	void DrawSperatorLine(ID2D1Brush* brush);
-	void DrawBoard(ID2D1Brush* brush,int Size);
-	void DrawDebug();
-	void DrawInfo();
-	void DrawPieces(ID2D1Brush** brush);
 	void HandleClick();
 	void HandleMove(int x,int y);
 
 	BatisGame*				bg;
 private:	
 	static const int nColourMax	= 64;
-	void DrawPiece(ID2D1Brush* brush,int X,int Y,int R);
+	void DrawSperatorLine(ID2D1Brush* brush);
+	void DrawBoard(ID2D1Brush* brush,int Size);
+	void DrawPieces(ID2D1Brush** brush);
+	void DrawDebug();
+	void DrawInfo();
+	void DrawPiece(ID2D1Brush* brush,FLOAT X,FLOAT Y,FLOAT R);
 	void DrawHint(ID2D1Brush* Brush,int x,int y,int idx,int mark);
 	int						px,py,ActiveX,ActiveY;
 	BatisSketch				Sketch;
-	ID2D1Factory*			pD2DFactory; // Direct2D factory
+	ID2D1Factory*			pD2DFactory;	// Direct2D factory
 	ID2D1HwndRenderTarget*	pRenderTarget;   // Render target	
 	ID2D1SolidColorBrush*	pGrayBrush;
 	ID2D1SolidColorBrush*	pWhiteBrush;
-	ID2D1Brush*	pBrushes[nColourMax];
-
+	ID2D1Brush*				pBrushes[nColourMax];
 	IDWriteFactory       * p_pDWriteFactory;
 	IDWriteTextFormat    * m_pText; 
-	
 };

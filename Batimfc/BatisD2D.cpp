@@ -1,30 +1,29 @@
 #include "StdAfx.h"
 #include "BatisD2D.h"
+#include "Batimfc.h"
 
-BatisSketchPara BatisSketch::DefaultParas[]={
+const BatisSketchPara BatisSketch::DefaultParas[]={
 	{0.74f,0.99f},
 };
 
-void BatisSketch::Update(int Width,int Height,int BoardNo,BatisSketchPara* Para)
+BatisSketch::BatisSketch(const BatisSketchPara* Para):Para(Para){}
+
+void BatisSketch::Update(int Width,int Height)
 {
+	int BoardNo	= GConf.nBoardSize;
 	SceneTop	= 0;
 	SceneLeft	= 0;
 	SceneWidth	= Width;
 	SceneHeight	= Height;
-	SperatorLine= static_cast<LONG>(Width * Para->SperatorLineRatio);
-	BoardSize	= static_cast<LONG>((SceneHeight<SperatorLine?
-					SceneHeight:SperatorLine)*Para->BoardSizeRatio);
+	SperatorLine= Width * Para->SperatorLineRatio;
+	
+	BoardSize	= (SceneHeight<SperatorLine?
+		SceneHeight:SperatorLine)*Para->BoardSizeRatio;
 	Delta		= BoardSize / BoardNo;
-	BoardSize	= Delta * BoardNo; //Make a multiple of BoardNo
 	BoardTop	= SceneTop + (SceneHeight - BoardSize) / 2;
 	BoardLeft	= SceneLeft + (SperatorLine - BoardSize) / 2;
 	BoardDown	= BoardTop + BoardSize;
 	BoardRight	= BoardLeft + BoardSize;
-}
-
-void BatisSketch::Update(int BoardNo,BatisSketchPara* Para)
-{
-	Update(SceneWidth,SceneHeight,BoardNo,Para);
 }
 
 BatisD2D::BatisD2D(void)
@@ -54,7 +53,6 @@ void BatisD2D::InitDevice(HWND hWnd)
 		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF((i+1)*Delta),&tmp);
 		pBrushes[i]=tmp;
 	}
-
 
 	DWriteCreateFactory(  
             DWRITE_FACTORY_TYPE_SHARED,  
@@ -97,6 +95,7 @@ void BatisD2D::DrawSperatorLine(ID2D1Brush* Brush)
 		D2D1::Point2F(Sketch.SperatorLine,Sketch.SceneTop+Sketch.SceneHeight),
 		Brush);
 }
+
 static int rx,ry;
 void BatisD2D::Resize(int x,int y)
 {
@@ -110,15 +109,16 @@ void BatisD2D::Resize(int x,int y)
 void BatisD2D::ResizeEnd()
 {
 	if(pRenderTarget){
-		Sketch.Update(rx,ry,bg?bg->GetBoardSize():8);
+		Sketch.Update(rx,ry);
 		pRenderTarget->Resize(D2D1::SizeU(Sketch.SceneWidth,Sketch.SceneHeight));
 	}
 }
 
-
-void BatisD2D::Update()
+void BatisD2D::StartGame()
 {
-	Sketch.Update(bg?bg->GetBoardSize():8);
+	bg = new BatisGame(GConf.nHuman+GConf.nComputer,GConf.nBoardSize,GConf.nHuman,GConf.nLevel);
+	bg->Start();
+	d2d.Render();
 }
 
 void BatisD2D::DrawBoard(ID2D1Brush* Brush,int Size)
@@ -126,7 +126,7 @@ void BatisD2D::DrawBoard(ID2D1Brush* Brush,int Size)
 	pRenderTarget->DrawRectangle(
 		D2D1::RectF(Sketch.BoardLeft,Sketch.BoardTop,Sketch.BoardRight,Sketch.BoardDown),
 		Brush);
-	LONG Delta = Sketch.BoardSize / (Size);
+	FLOAT Delta = Sketch.Delta;
 	for(int i=1;i<Size;i++){
 		pRenderTarget->DrawLine(
 			D2D1::Point2F(Sketch.BoardLeft+Delta*i,Sketch.BoardTop),
@@ -141,14 +141,16 @@ void BatisD2D::DrawBoard(ID2D1Brush* Brush,int Size)
 
 
 
-void BatisD2D::DrawHint(ID2D1Brush* Brush,int x,int y,int idx,int mark)
+void BatisD2D::DrawHint(ID2D1Brush* Brush,int X,int Y,int idx,int mark)
 {
 	WCHAR dk[255];
+	FLOAT x=static_cast<FLOAT>(X);
+	FLOAT y=static_cast<FLOAT>(Y);
 	wsprintf(dk,L"%d(%d)",idx,mark);
 	pRenderTarget->DrawText(  
 			dk,  
 			wcslen(dk),  
-			m_pText,  
+			m_pText, 
 			D2D1::RectF(x, y,x+30,y+30),  
 			Brush
         );
@@ -193,13 +195,13 @@ void BatisD2D::DrawInfo()
 	  wsprintf(dk,L"游戏状态:%s\n轮状态:%s\n轮数:%d\n选手:%d\n",
 		  WGameStatusMsg[bg->GetGameStatus()],WTurnStatusMsg[bg->GetTurnStatus()],bg->GetTurn(),bg->GetActivePlayer()
 		);
-	  wcscat(dk,L"局势：");
+	  wcscat_s(dk,L"局势：");
 	  WCHAR NC[10];
 	  const ChessBoard* board=bg->GetBoard();
 	  int num=bg->GetNumberOfPlayer();
 	  for(int i=0;i<=num;i++){
 		  wsprintf(NC,L"%d:",board->GetStatus(i));
-		  wcscat(dk,NC);
+		  wcscat_s(dk,NC);
 	  }
 	  
 		pRenderTarget->DrawText(  
@@ -211,8 +213,7 @@ void BatisD2D::DrawInfo()
         );
 }
 
-
-void BatisD2D::DrawPiece(ID2D1Brush* brush,int X,int Y,int R)
+void BatisD2D::DrawPiece(ID2D1Brush* brush,FLOAT X,FLOAT Y,FLOAT R)
 {
 	
 	pRenderTarget->FillEllipse(
@@ -227,15 +228,16 @@ void BatisD2D::DrawPieces(ID2D1Brush** brush)
 {
 	const ChessBoard* board=bg->GetBoard();
 	int Num=bg->GetBoardSize();
-	LONG D = Sketch.BoardSize / (Num);
+	FLOAT D = Sketch.Delta;
 	for(int i=0;i<Num;i++){
 		for(int j=0;j<Num;j++){
 			int idx=board->GetID(i,j)*(nColourMax-1) /  bg->GetNumberOfPlayer() ;
-			//afxDump<<idx<<"|";
 			if(idx>0)
-				DrawPiece(brush[idx],Sketch.BoardLeft+D*i+D/2,Sketch.BoardTop+D*j+D/2,D/2.1);
+				DrawPiece(brush[idx],
+				Sketch.BoardLeft+D*i+D/2,
+				Sketch.BoardTop+D*j+D/2,
+				D/2.1F);
 		}
-		//afxDump<<"\n";
 	}
 
 	if(ActiveX>=0 && ActiveY>=0){
@@ -266,8 +268,8 @@ void BatisD2D::HandleMove(int x,int y)
 {
 	px=x;py=y;
 	if(x>Sketch.BoardLeft && x<Sketch.BoardRight && y> Sketch.BoardTop && y<Sketch.BoardDown){
-		ActiveX=(x-Sketch.BoardLeft)/Sketch.Delta;
-		ActiveY=(y-Sketch.BoardTop)/Sketch.Delta;
+		ActiveX=static_cast<int>((x-Sketch.BoardLeft)/Sketch.Delta);
+		ActiveY=static_cast<int>((y-Sketch.BoardTop)/Sketch.Delta);
 	}else
 	{
 		ActiveX=-1;
