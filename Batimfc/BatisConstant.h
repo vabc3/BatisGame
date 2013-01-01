@@ -1,4 +1,5 @@
 //A set of global constants
+#pragma once
 struct BatisConstant{
 	static const int nPlayerDefault		= 2;
 	static const int nPlayerMin			= 2;

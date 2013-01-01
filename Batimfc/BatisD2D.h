@@ -45,10 +45,7 @@ private:
 	BatisSketch				Sketch;
 	ID2D1Factory*			pD2DFactory; // Direct2D factory
 	ID2D1HwndRenderTarget*	pRenderTarget;   // Render target	
-	ID2D1SolidColorBrush*	pBlackBrush; // A black brush, reflect the line color
-	ID2D1SolidColorBrush*	pRedBrush; // A black brush, reflect the line color
-	ID2D1SolidColorBrush*	pGreenBrush ; // A black brush, reflect the line color
-	ID2D1SolidColorBrush*	pBlueBrush; // A black brush, reflect the line color
+	ID2D1SolidColorBrush*	pGrayBrush;
 	ID2D1SolidColorBrush*	pWhiteBrush;
 	ID2D1Brush*	pBrushes[nColourMax];
 

@@ -46,10 +46,7 @@ void BatisD2D::InitDevice(HWND hWnd)
 		&pRenderTarget
 	) ;
 	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White),&pWhiteBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),&pBlackBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red),&pRedBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green),&pGreenBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue),&pBlueBrush);
+	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray,.5),&pGrayBrush);
 	
 	int Delta	= 0xFFFFFF / (nColourMax+1);
 	for(int i=0;i<nColourMax;i++){
@@ -83,13 +80,9 @@ void BatisD2D::Render()
 	pRenderTarget->BeginDraw() ;
 	pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Green));
 	
-	DrawSperatorLine(pBlueBrush);
+	DrawSperatorLine(pWhiteBrush);
 	if(bg){
-	DrawBoard(pWhiteBrush,bg->GetBoardSize());
-	ID2D1Brush* bst[]={
-		pBlueBrush,pGreenBrush,pRedBrush,pRedBrush,pBlueBrush,pGreenBrush,pRedBrush,
-	};
-	
+		DrawBoard(pWhiteBrush,bg->GetBoardSize());
 		DrawPieces(pBrushes);
 		DrawInfo();
 		DrawDebug();
@@ -104,18 +97,20 @@ void BatisD2D::DrawSperatorLine(ID2D1Brush* Brush)
 		D2D1::Point2F(Sketch.SperatorLine,Sketch.SceneTop+Sketch.SceneHeight),
 		Brush);
 }
-
+static int rx,ry;
 void BatisD2D::Resize(int x,int y)
 {
-	if(pRenderTarget){
-		Sketch.Update(x,y,bg?bg->GetBoardSize():8);
-		//pRenderTarget->Resize(D2D1::SizeU(x,y));
-	}
+	rx=x;ry=y;
+	//if(pRenderTarget){
+	//	Sketch.Update(x,y,bg?bg->GetBoardSize():8);
+	//	//pRenderTarget->Resize(D2D1::SizeU(x,y));
+	//}
 }
 
 void BatisD2D::ResizeEnd()
 {
 	if(pRenderTarget){
+		Sketch.Update(rx,ry,bg?bg->GetBoardSize():8);
 		pRenderTarget->Resize(D2D1::SizeU(Sketch.SceneWidth,Sketch.SceneHeight));
 	}
 }
@@ -248,7 +243,7 @@ void BatisD2D::DrawPieces(ID2D1Brush** brush)
 			D2D1::RoundedRect(
 			D2D1::RectF(Sketch.BoardLeft+D*ActiveX,Sketch.BoardTop+D*ActiveY,
 				Sketch.BoardLeft+D*ActiveX+D,Sketch.BoardTop+D*ActiveY+D)
-			,17,17),brush[0]);
+				,17,17),pGrayBrush);
 	}
 } 
 

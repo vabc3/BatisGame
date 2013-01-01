@@ -121,12 +121,9 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 	d2d.Render();
 }
 
-
 void CMainFrame::OnExitSizeMove()
 {
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-
 	CFrameWnd::OnExitSizeMove();
 	afxDump<<"OSEM\n";
-	//d2d.ResizeEnd();
+	d2d.ResizeEnd();
 }

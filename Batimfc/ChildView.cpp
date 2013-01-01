@@ -69,7 +69,7 @@ void CChildView::OnSize(UINT nType, int cx, int cy)
 	afxDump<<"OS\n";
 	CWnd::OnSize(nType, cx, cy);
 	d2d.Resize(cx,cy);
-	d2d.ResizeEnd();
+	//d2d.ResizeEnd();
 	d2d.Render();
 }
 
