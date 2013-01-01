@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_SIZE()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_EXITSIZEMOVE()
 END_MESSAGE_MAP()
 
 // CChildView 消息处理程序
@@ -48,12 +49,6 @@ void CChildView::OnPaint()
 	d2d.Render();
 }
 
-void CChildView::OnSize(UINT nType, int cx, int cy)
-{
-	CWnd::OnSize(nType, cx, cy);
-	d2d.Resize(cx,cy);
-}
-
 
 void CChildView::OnMouseMove(UINT nFlags, CPoint point)
 {
@@ -69,3 +64,19 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 }
 
 
+void CChildView::OnSize(UINT nType, int cx, int cy)
+{
+	afxDump<<"OS\n";
+	CWnd::OnSize(nType, cx, cy);
+	d2d.Resize(cx,cy);
+	d2d.ResizeEnd();
+	d2d.Render();
+}
+
+
+void CChildView::OnExitSizeMove()
+{
+	afxDump<<"OSE\n";
+	CWnd::OnExitSizeMove();
+	d2d.ResizeEnd();
+}

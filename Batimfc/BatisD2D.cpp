@@ -50,8 +50,15 @@ void BatisD2D::InitDevice(HWND hWnd)
 	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red),&pRedBrush);
 	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green),&pGreenBrush);
 	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue),&pBlueBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Yellow),&pYellowBrush);
-	pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black),D2D1::BrushProperties(0.6),&pGrayBrush);
+	
+	int Delta	= 0xFFFFFF / (nColourMax+1);
+	for(int i=0;i<nColourMax;i++){
+		ID2D1SolidColorBrush*	tmp;
+		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF((i+1)*Delta),&tmp);
+		pBrushes[i]=tmp;
+	}
+
+
 	DWriteCreateFactory(  
             DWRITE_FACTORY_TYPE_SHARED,  
             __uuidof(p_pDWriteFactory),  
@@ -80,19 +87,10 @@ void BatisD2D::Render()
 	if(bg){
 	DrawBoard(pWhiteBrush,bg->GetBoardSize());
 	ID2D1Brush* bst[]={
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
-		pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,pGrayBrush,pBlueBrush,pGreenBrush,pRedBrush,pYellowBrush,
+		pBlueBrush,pGreenBrush,pRedBrush,pRedBrush,pBlueBrush,pGreenBrush,pRedBrush,
 	};
 	
-		DrawPieces(bst);
+		DrawPieces(pBrushes);
 		DrawInfo();
 		DrawDebug();
 	}
@@ -111,9 +109,17 @@ void BatisD2D::Resize(int x,int y)
 {
 	if(pRenderTarget){
 		Sketch.Update(x,y,bg?bg->GetBoardSize():8);
-		pRenderTarget->Resize(D2D1::SizeU(x,y));
+		//pRenderTarget->Resize(D2D1::SizeU(x,y));
 	}
 }
+
+void BatisD2D::ResizeEnd()
+{
+	if(pRenderTarget){
+		pRenderTarget->Resize(D2D1::SizeU(Sketch.SceneWidth,Sketch.SceneHeight));
+	}
+}
+
 
 void BatisD2D::Update()
 {
@@ -227,13 +233,15 @@ void BatisD2D::DrawPieces(ID2D1Brush** brush)
 	const ChessBoard* board=bg->GetBoard();
 	int Num=bg->GetBoardSize();
 	LONG D = Sketch.BoardSize / (Num);
-	for(int i=0;i<Num;i++)
+	for(int i=0;i<Num;i++){
 		for(int j=0;j<Num;j++){
-			int idx=board->GetID(i,j);
-			//afxDump<<idx;
+			int idx=board->GetID(i,j)*(nColourMax-1) /  bg->GetNumberOfPlayer() ;
+			//afxDump<<idx<<"|";
 			if(idx>0)
 				DrawPiece(brush[idx],Sketch.BoardLeft+D*i+D/2,Sketch.BoardTop+D*j+D/2,D/2.1);
 		}
+		//afxDump<<"\n";
+	}
 
 	if(ActiveX>=0 && ActiveY>=0){
 		pRenderTarget->FillRoundedRectangle(
@@ -247,7 +255,7 @@ void BatisD2D::DrawPieces(ID2D1Brush** brush)
 
 void BatisD2D::HandleClick()
 {
-	
+	if(!bg)return ;
 	if(ActiveX>=0 && ActiveX>=0){
 		if(bg->IsWaitingForInput())
 		bg->Put(ActiveX,ActiveY);

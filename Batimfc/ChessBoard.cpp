@@ -30,7 +30,7 @@ ChessBoard::ChessBoard(int numberOfPlayer,int size)
 	Valid		= true;
 	if(numberOfPlayer< BatisConstant::nPlayerMin || numberOfPlayer> BatisConstant::nPlayerMax){
 		Valid	= false;
-	}else if(size<BatisConstant::nBoardSizeMin || size> BatisConstant::nComputerMax){
+	}else if(size<BatisConstant::nBoardSizeMin || size> BatisConstant::nBoardSizeMax){
 		Valid	= false;
 	}else if(size<=numberOfPlayer){
 		Valid	= false;

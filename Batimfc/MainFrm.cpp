@@ -19,6 +19,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
 	ON_WM_TIMER()
+	ON_WM_EXITSIZEMOVE()
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -60,7 +61,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 	//m_wndView.getsa
 	d2d.InitDevice(m_wndView.GetSafeHwnd());
-	SetTimer(1,500,NULL);
+	SetTimer(1,250,NULL);
 	return 0;
 }
 
@@ -117,4 +118,15 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 	CFrameWnd::OnTimer(nIDEvent);
 	TRACE("X");
 	if(d2d.bg)d2d.bg->AutoGo();
+	d2d.Render();
+}
+
+
+void CMainFrame::OnExitSizeMove()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CFrameWnd::OnExitSizeMove();
+	afxDump<<"OSEM\n";
+	//d2d.ResizeEnd();
 }

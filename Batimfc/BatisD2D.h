@@ -25,6 +25,7 @@ public:
 
 	void InitDevice(HWND hWnd);
 	void Resize(int x,int y);
+	void ResizeEnd();
 	void Update();
 	void Render();
 	void DrawSperatorLine(ID2D1Brush* brush);
@@ -37,6 +38,7 @@ public:
 
 	BatisGame*				bg;
 private:	
+	static const int nColourMax	= 64;
 	void DrawPiece(ID2D1Brush* brush,int X,int Y,int R);
 	void DrawHint(ID2D1Brush* Brush,int x,int y,int idx,int mark);
 	int						px,py,ActiveX,ActiveY;
@@ -47,9 +49,10 @@ private:
 	ID2D1SolidColorBrush*	pRedBrush; // A black brush, reflect the line color
 	ID2D1SolidColorBrush*	pGreenBrush ; // A black brush, reflect the line color
 	ID2D1SolidColorBrush*	pBlueBrush; // A black brush, reflect the line color
-	ID2D1SolidColorBrush*	pYellowBrush;
-	ID2D1SolidColorBrush*	pGrayBrush;
-	ID2D1SolidColorBrush*  pWhiteBrush;
+	ID2D1SolidColorBrush*	pWhiteBrush;
+	ID2D1Brush*	pBrushes[nColourMax];
+
 	IDWriteFactory       * p_pDWriteFactory;
-	IDWriteTextFormat    * m_pText;  
+	IDWriteTextFormat    * m_pText; 
+	
 };
