@@ -3,20 +3,25 @@
 #include "Batimfc.h"
 
 const BatisSketchPara BatisSketch::DefaultParas[]={
-	{0.74f,0.99f},
+	{0.74f,0.97f},
 };
 
 BatisSketch::BatisSketch(const BatisSketchPara* Para):Para(Para){}
 
 void BatisSketch::Update(int Width,int Height)
 {
-	int BoardNo	= GConf.nBoardSize;
+	
 	SceneTop	= 0;
 	SceneLeft	= 0;
 	SceneWidth	= Width;
 	SceneHeight	= Height;
 	SperatorLine= Width * Para->SperatorLineRatio;
+	Update();
 	
+}
+
+void BatisSketch::Update(){
+	int BoardNo	= GConf.nBoardSize;
 	BoardSize	= (SceneHeight<SperatorLine?
 		SceneHeight:SperatorLine)*Para->BoardSizeRatio;
 	Delta		= BoardSize / BoardNo;
@@ -51,7 +56,25 @@ void BatisD2D::InitDevice(HWND hWnd)
 	for(int i=0;i<nColourMax;i++){
 		ID2D1SolidColorBrush*	tmp;
 		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF((i+1)*Delta),&tmp);
-		pBrushes[i]=tmp;
+		D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES gp;
+		
+		ID2D1GradientStopCollection* gc;
+		D2D1_GRADIENT_STOP st[]={
+			D2D1::GradientStop(3,D2D1::ColorF((i+1)*Delta)),
+			D2D1::GradientStop(5,D2D1::ColorF(0))
+		};
+		pRenderTarget->CreateGradientStopCollection(st,2,&gc);
+		ID2D1RadialGradientBrush* tmp2;
+		pRenderTarget->CreateRadialGradientBrush(
+			D2D1::RadialGradientBrushProperties(
+			D2D1::Point2F(0,0),
+			D2D1::Point2F(3,3),
+			5,5),
+			D2D1::BrushProperties(1),
+			gc,
+			&tmp2);
+			
+		pBrushes[i]=tmp2;
 	}
 
 	DWriteCreateFactory(  
@@ -75,6 +98,7 @@ void BatisD2D::InitDevice(HWND hWnd)
 
 void BatisD2D::Render()
 {
+	if(!pRenderTarget)return;
 	pRenderTarget->BeginDraw() ;
 	pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Green));
 	
@@ -118,7 +142,8 @@ void BatisD2D::StartGame()
 {
 	bg = new BatisGame(GConf.nHuman+GConf.nComputer,GConf.nBoardSize,GConf.nHuman,GConf.nLevel);
 	bg->Start();
-	d2d.Render();
+	Sketch.Update();
+	Render();
 }
 
 void BatisD2D::DrawBoard(ID2D1Brush* Brush,int Size)

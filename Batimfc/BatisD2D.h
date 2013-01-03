@@ -17,6 +17,7 @@ struct BatisSketch{
 	const BatisSketchPara* Para;
 	const static BatisSketchPara DefaultParas[1];
 	void Update(int x,int y);
+	void Update();
 };
 
 class BatisD2D
