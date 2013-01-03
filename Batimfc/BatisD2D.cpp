@@ -74,6 +74,30 @@ void BatisD2D::InitDevice(HWND hWnd)
 			gc,
 			&tmp2);
 			
+			D2D1_GRADIENT_STOP gradientStops[2] ;
+			gradientStops[0].color = D2D1::ColorF(D2D1::ColorF::Blue) ;
+gradientStops[0].position = 0.f ;
+gradientStops[1].color = D2D1::ColorF((i+1)*Delta) ;
+gradientStops[1].position = 1.f ;
+ID2D1GradientStopCollection* pGradientStops = NULL ;
+hr = pRenderTarget->CreateGradientStopCollection(
+    gradientStops,
+    2, 
+    D2D1_GAMMA_2_2,
+    D2D1_EXTEND_MODE_CLAMP,
+    &pGradientStops
+    ) ;
+		D2D1_ELLIPSE g_Ellipse = D2D1::Ellipse(D2D1::Point2F(30, 30), 20, 15);
+		pRenderTarget->CreateRadialGradientBrush(
+    D2D1::RadialGradientBrushProperties(
+    g_Ellipse.point,
+    D2D1::Point2F(0, 0),
+    g_Ellipse.radiusX,
+    g_Ellipse.radiusY),
+    pGradientStops,
+    &tmp2
+    ) ;
+
 		pBrushes[i]=tmp2;
 	}
 
